@@ -1,7 +1,8 @@
 "use client";
 import React from 'react';
-import { Server, Zap, HardDrive, Cpu, Activity } from 'lucide-react';
+import { Server, Zap, HardDrive, Cpu, Activity, Key, Eye, EyeOff } from 'lucide-react';
 import { AVAILABLE_MODELS, ModelConfig } from '@/constants/models';
+import { useState, useEffect } from 'react';
 
 interface SidebarProps {
   currentModel: string | null;
@@ -18,6 +19,20 @@ export function Sidebar({
   onSelectModel,
   isSwapping 
 }: SidebarProps) {
+  const [apiKey, setApiKey] = useState('');
+  const [showKey, setShowKey] = useState(false);
+
+  // Load key from localStorage on mount
+  useEffect(() => {
+    const savedKey = localStorage.getItem('user_api_key');
+    if (savedKey) setApiKey(savedKey);
+  }, []);
+
+  // Save key to localStorage
+  const handleKeyChange = (value: string) => {
+    setApiKey(value);
+    localStorage.setItem('user_api_key', value);
+  };
 
   return (
     <aside className="w-80 h-screen bg-slate-950 border-r border-slate-800 flex flex-col text-slate-200 shadow-2xl">
@@ -87,7 +102,7 @@ export function Sidebar({
               </div>
 
               {/* Loading Overlay */}
-              {isSwapping && isActive && ( // Note: Logic handled in parent, this is just visual
+              {isSwapping && isActive && (
                  <div className="absolute inset-0 bg-slate-950/80 flex items-center justify-center backdrop-blur-sm">
                     <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                  </div>
@@ -97,8 +112,33 @@ export function Sidebar({
         })}
       </div>
 
+      {/* --- API Key Settings --- */}
+      <div className="p-4 mx-4 mb-4 bg-slate-900/60 border border-slate-800 rounded-xl">
+        <div className="flex items-center justify-between mb-2 px-1">
+          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+            <Key className="w-3 h-3" /> Authentication
+          </label>
+          <button 
+            onClick={() => setShowKey(!showKey)}
+            className="text-slate-500 hover:text-slate-300 transition-colors"
+          >
+            {showKey ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+          </button>
+        </div>
+        <input 
+          type={showKey ? "text" : "password"}
+          value={apiKey}
+          onChange={(e) => handleKeyChange(e.target.value)}
+          placeholder="Enter API Key..."
+          className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-blue-400 placeholder:text-slate-700 focus:outline-none focus:border-blue-500/50 transition-all font-mono"
+        />
+        <p className="text-[9px] text-slate-600 mt-2 px-1 leading-relaxed">
+          Custom keys override the default session.
+        </p>
+      </div>
+
       {/* --- Footer --- */}
-      <div className="p-4 border-t border-slate-800 text-xs text-slate-600 text-center">
+      <div className="p-4 border-t border-slate-800 text-[10px] text-slate-600 text-center bg-slate-950/50">
         Powered by vLLM & pgvector
       </div>
     </aside>
