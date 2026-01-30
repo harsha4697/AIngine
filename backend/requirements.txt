@@ -1,0 +1,11 @@
+fastapi>=0.110.0
+uvicorn>=0.29.0
+vllm>=0.6.0  # Crucial upgrade for Llama 3.3 / Qwen support
+pydantic>=2.0
+python-dotenv
+sentence-transformers==2.3.1
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.25
+pgvector==0.2.4
+asyncpg==0.29.0
+greenlet==3.0.3

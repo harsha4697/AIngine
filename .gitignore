@@ -1,0 +1,23 @@
+# --- Dependencies ---
+node_modules/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# --- Next.js Build ---
+.next/
+out/
+build/
+dist/
+
+# --- Environment Secrets ---
+.env
+.env.local
+
+# --- HEAVY AI MODELS (CRITICAL) ---
+# Do not upload the model weights!
+backend/models/
+*.safetensors
+*.bin
+*.pth
